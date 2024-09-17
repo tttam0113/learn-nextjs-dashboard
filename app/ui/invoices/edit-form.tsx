@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useActionState } from 'react';
 
-import { updateInvoice } from '@/app/lib/actions';
+import { State, updateInvoice } from '@/app/lib/actions';
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import { Button } from '@/app/ui/button';
 import {
@@ -16,9 +17,12 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const initialState: State = { message: null, errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+
   return (
-    <form action={updateInvoiceWithId}>
+    <form action={formAction}>
       <input type='hidden' name='id' value={invoice.id} />
       <div className='rounded-md bg-gray-50 p-4 md:p-6'>
         {/* Customer Name */}
